@@ -43,11 +43,13 @@ public class ControladorPrincipal implements ActionListener {
 		view.getMntmExit().addActionListener(this);
 		view.getMntmSesion().addActionListener(this);
 		view.getMntmConfiguracion().addActionListener(this);
+		view.getMntmDHCP().addActionListener(this);
 
 		// Añadir los ActionCommand
 		view.getMntmExit().setActionCommand("Exit");
 		view.getMntmSesion().setActionCommand("Abrir JIFrame Login");
 		view.getMntmConfiguracion().setActionCommand("Abrir JIFProperties");
+		view.getMntmDHCP().setActionCommand("Abrir DHCP Manager");
 
 	}
 
@@ -68,8 +70,15 @@ public class ControladorPrincipal implements ActionListener {
 			iniciarSesion();
 		} else if (command.equals("Abrir JIFProperties")) {
 			openProperties();
+		} else if (command.equals("Abrir DHCP Manager")) {
+			openDHCP();
 		}
+		
+	}
 
+	private void openDHCP() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void openProperties() {

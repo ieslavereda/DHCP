@@ -21,6 +21,7 @@ public class Principal extends JFrame {
 	private JDesktopPane desktop;
 	private JMenuItem mntmSesion;
 	private JMenuItem mntmConfiguracion;
+	private JMenuItem mntmDHCP;
 
 
 	/**
@@ -53,8 +54,16 @@ public class Principal extends JFrame {
 		mntmSesion.setPreferredSize(new Dimension(91, 30));
 		
 		mntmConfiguracion = new JMenuItem("Configuracion");
-		mntmConfiguracion.setMaximumSize(new Dimension(120, 100));
+		mntmConfiguracion.setEnabled(false);
+		mntmConfiguracion.setIcon(new ImageIcon(Principal.class.getResource("/es/ieslavereda/DHCP/images/settings40.png")));
+		mntmConfiguracion.setMaximumSize(new Dimension(140, 100));
 		menuBar.add(mntmConfiguracion);
+		
+		mntmDHCP = new JMenuItem("DHCP");
+		mntmDHCP.setIcon(new ImageIcon(Principal.class.getResource("/es/ieslavereda/DHCP/images/dhcp40.png")));
+		mntmDHCP.setEnabled(false);
+		mntmDHCP.setMaximumSize(new Dimension(100, 100));
+		menuBar.add(mntmDHCP);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -80,4 +89,9 @@ public class Principal extends JFrame {
 	public JMenuItem getMntmConfiguracion() {
 		return mntmConfiguracion;
 	}
+
+	public JMenuItem getMntmDHCP() {
+		return mntmDHCP;
+	}
+	
 }
