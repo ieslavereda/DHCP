@@ -4,12 +4,15 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
 import es.ieslavereda.DHCP.model.Model;
+import es.ieslavereda.DHCP.view.JIFDHCP;
 import es.ieslavereda.DHCP.view.JIFLogin;
 import es.ieslavereda.DHCP.view.JIFProperties;
 import es.ieslavereda.DHCP.view.Principal;
@@ -20,6 +23,7 @@ public class ControladorPrincipal implements ActionListener {
 	private Principal view;
 	private JIFLogin jifLogin;
 	private JIFProperties jifProperties;
+	private JIFDHCP jifDHCP;
 
 	public ControladorPrincipal(Principal view, Model model) {
 		super();
@@ -72,12 +76,50 @@ public class ControladorPrincipal implements ActionListener {
 			openProperties();
 		} else if (command.equals("Abrir DHCP Manager")) {
 			openDHCP();
+		}else if (command.equals("Save properties")) {
+			saveProperties();
 		}
 		
 	}
 
+	private void saveProperties() {
+		
+		int option = JOptionPane.showConfirmDialog(jifProperties, "Estas usted seguro de guardar la configuracion", "Guardar configuracion", JOptionPane.YES_NO_OPTION);
+		
+		if(option == JOptionPane.YES_OPTION) {
+			String login = jifProperties.getTextFieldLogin().getText();
+			String passwd = String.valueOf(jifProperties.getPasswordField().getPassword());
+			InetAddress IP=null;
+			int port = Integer.parseInt(jifProperties.getTextFieldPort().getText());
+			
+			try {
+				
+				IP = InetAddress.getByName(jifProperties.getTextFieldIP().getText());
+				if(model.saveProperties(login, passwd, IP, port))
+					JOptionPane.showMessageDialog(jifProperties, "Datos grabados", "Guardar configuracion", JOptionPane.INFORMATION_MESSAGE);
+				
+			} catch (UnknownHostException e) {
+				JOptionPane.showMessageDialog(jifProperties, "Se ha producido un error. Compruebe la direccio IP", "Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+		
+	}
+
 	private void openDHCP() {
-		// TODO Auto-generated method stub
+		
+		if(!estaAbierto(jifDHCP)) {
+			
+			jifDHCP = new JIFDHCP();
+			view.getDesktop().add(jifDHCP);
+			
+			
+			new ControladorJIFDHCP(jifDHCP,model).go();		
+			
+		}
 		
 	}
 
@@ -109,11 +151,26 @@ public class ControladorPrincipal implements ActionListener {
 		String passwd = String.valueOf(jifLogin.getPasswordField().getPassword());
 		
 		if(model.comprobarLogin(login, passwd)) {
-			JOptionPane.showMessageDialog(null, "Usuario correcto!", "Info", JOptionPane.INFORMATION_MESSAGE);
 			jifLogin.dispose();
+			JOptionPane.showMessageDialog(null, "Usuario correcto!", "Info", JOptionPane.INFORMATION_MESSAGE);
+			habilitarOpciones();
+			
 		}else {
 			JOptionPane.showMessageDialog(null, "Usuario incorrecto!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		
+	}
+
+	private void habilitarOpciones() {
+		
+		view.getMntmConfiguracion().setEnabled(true);
+		view.getMntmDHCP().setEnabled(true);
+		
+	}
+	private void deshabilitarOpciones() {
+		
+		view.getMntmConfiguracion().setEnabled(false);
+		view.getMntmDHCP().setEnabled(false);
 		
 	}
 

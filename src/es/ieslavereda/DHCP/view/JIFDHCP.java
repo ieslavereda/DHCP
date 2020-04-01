@@ -21,12 +21,38 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class JIFDHCP extends JInternalFrame {
 	private JTextField textFieldPort;
 	private JTextField textFieldIP;
 	private JTable tableNets;
 	private JTable tableHosts;
+	private JButton btnRestart;
+	private JButton btnStatus;
+	private JButton btnJournal;
+	private JButton btnUploadConf;
+	private JButton btnDownloadConf;
+	private JTextPane textPaneDatosDelServidor;
+	private JTextPane textPaneGlobal;
+	private JTextPane textPaneInfo;
+	private JButton btnSave;
+	private JButton btnCancelar;
+	private JButton btnAdd;
+	private JButton btnEdit;
+	private JButton btnDelete;
+	private JButton btnRefreshNets;
+	private JComboBox comboBox;
+	private JButton btnFreeIPs;
+	private JButton btnRefreshHosts;
+	private JButton btnHostsCancel;
+	private JButton btnEdit_1;
+	private JButton btnDelete_1;
+	private JLabel labelHostsDisponibles;
+	private JMenuItem mntmOpen;
+	private JMenuItem mntmSave;
 
 
 	/**
@@ -34,7 +60,7 @@ public class JIFDHCP extends JInternalFrame {
 	 */
 	public JIFDHCP() {
 		setTitle("DHCP");
-		setBounds(100, 100, 910, 558);
+		setBounds(100, 100, 910, 582);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -71,31 +97,31 @@ public class JIFDHCP extends JInternalFrame {
 		);
 		panelBotonesServidor.setLayout(new MigLayout("", "[][][grow][][][]", "[]"));
 		
-		JButton btnDownloadConf = new JButton("Download .conf");
+		btnDownloadConf = new JButton("Download .conf");
 		panelBotonesServidor.add(btnDownloadConf, "cell 0 0");
 		
-		JButton btnUploadConf = new JButton("Upload .conf");
+		btnUploadConf = new JButton("Upload .conf");
 		panelBotonesServidor.add(btnUploadConf, "cell 1 0");
 		
-		JButton btnJournal = new JButton("Journal");
+		btnJournal = new JButton("Journal");
 		panelBotonesServidor.add(btnJournal, "cell 3 0");
 		
-		JButton btnStatus = new JButton("Status");
+		btnStatus = new JButton("Status");
 		btnStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		panelBotonesServidor.add(btnStatus, "cell 4 0");
 		
-		JButton btnRestart = new JButton("Restart");
+		btnRestart = new JButton("Restart");
 		panelBotonesServidor.add(btnRestart, "cell 5 0");
 		panelInfo.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		panelInfo.add(scrollPane_2, BorderLayout.CENTER);
 		
-		JTextPane textPane_2 = new JTextPane();
-		scrollPane_2.setViewportView(textPane_2);
+		textPaneDatosDelServidor = new JTextPane();
+		scrollPane_2.setViewportView(textPaneDatosDelServidor);
 		panelIPPort.setLayout(new MigLayout("", "[][188.00][80.00][]", "[]"));
 		
 		JLabel lblIp = new JLabel("IP Servidor");
@@ -145,10 +171,10 @@ public class JIFDHCP extends JInternalFrame {
 		);
 		panelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton btnSave = new JButton("Save");
+		btnSave = new JButton("Save");
 		panelBotones.add(btnSave);
 		
-		JButton btnCancelar = new JButton("Cancel");
+		btnCancelar = new JButton("Cancel");
 		panelBotones.add(btnCancelar);
 		
 		JLabel lblInfo = new JLabel("Info");
@@ -172,8 +198,8 @@ public class JIFDHCP extends JInternalFrame {
 					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
 		);
 		
-		JTextPane textPane_1 = new JTextPane();
-		scrollPane_1.setViewportView(textPane_1);
+		textPaneInfo = new JTextPane();
+		scrollPane_1.setViewportView(textPaneInfo);
 		panelInferior.setLayout(gl_panelInferior);
 		
 		JLabel lblConfiguracionGlobal = new JLabel("Global");
@@ -197,8 +223,8 @@ public class JIFDHCP extends JInternalFrame {
 					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
 		);
 		
-		JTextPane textPane = new JTextPane();
-		scrollPane.setViewportView(textPane);
+		textPaneGlobal = new JTextPane();
+		scrollPane.setViewportView(textPaneGlobal);
 		panelSuperior.setLayout(gl_panelSuperior);
 		panelGlobal.setLayout(gl_panelGlobal);
 		
@@ -229,16 +255,16 @@ public class JIFDHCP extends JInternalFrame {
 		);
 		panel_3.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton btnRefresh = new JButton("Refresh");
-		panel_3.add(btnRefresh);
+		btnRefreshNets = new JButton("Refresh");
+		panel_3.add(btnRefreshNets);
 		
-		JButton btnDelete = new JButton("Delete");
+		btnDelete = new JButton("Delete");
 		panel_3.add(btnDelete);
 		
-		JButton btnEdit = new JButton("Edit");
+		btnEdit = new JButton("Edit");
 		panel_3.add(btnEdit);
 		
-		JButton btnAdd = new JButton("Add");
+		btnAdd = new JButton("Add");
 		panel_3.add(btnAdd);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
@@ -291,26 +317,26 @@ public class JIFDHCP extends JInternalFrame {
 		JLabel lblHostsEnLa = new JLabel("Hosts en la red seleccionada:");
 		panelHostBotones.add(lblHostsEnLa, "cell 0 0");
 		
-		JLabel label = new JLabel("0");
-		panelHostBotones.add(label, "cell 1 0,alignx center");
+		labelHostsDisponibles = new JLabel("0");
+		panelHostBotones.add(labelHostsDisponibles, "cell 1 0,alignx center");
 		
-		JButton btnDelete_1 = new JButton("Delete");
+		btnDelete_1 = new JButton("Delete");
 		panelHostBotones.add(btnDelete_1, "cell 3 0");
 		
-		JButton btnEdit_1 = new JButton("Edit");
+		btnEdit_1 = new JButton("Edit");
 		panelHostBotones.add(btnEdit_1, "cell 4 0");
 		
-		JButton btnHostsCancel = new JButton("Cancel");
+		btnHostsCancel = new JButton("Cancel");
 		panelHostBotones.add(btnHostsCancel, "cell 5 0");
 		panelHostSuperior.setLayout(new MigLayout("", "[248.00][][grow][]", "[]"));
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		panelHostSuperior.add(comboBox, "cell 0 0,growx");
 		
-		JButton btnRefresh_1 = new JButton("Refresh");
-		panelHostSuperior.add(btnRefresh_1, "cell 1 0");
+		btnRefreshHosts = new JButton("Refresh");
+		panelHostSuperior.add(btnRefreshHosts, "cell 1 0");
 		
-		JButton btnFreeIPs = new JButton("Free IPs");
+		btnFreeIPs = new JButton("Free IPs");
 		panelHostSuperior.add(btnFreeIPs, "cell 3 0,growy");
 		panelHostsMedio.setLayout(new BorderLayout(0, 0));
 		
@@ -327,6 +353,154 @@ public class JIFDHCP extends JInternalFrame {
 		));
 		scrollPane_4.setViewportView(tableHosts);
 		panelHosts.setLayout(gl_panelHosts);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		mntmOpen = new JMenuItem("Open");
+		mnFile.add(mntmOpen);
+		
+		mntmSave = new JMenuItem("Save");
+		mnFile.add(mntmSave);
 
 	}
+
+
+	public JMenuItem getMntmOpen() {
+		return mntmOpen;
+	}
+
+
+	public JMenuItem getMntmSave() {
+		return mntmSave;
+	}
+
+
+	public JTextField getTextFieldPort() {
+		return textFieldPort;
+	}
+
+
+	public JTextField getTextFieldIP() {
+		return textFieldIP;
+	}
+
+
+	public JTable getTableNets() {
+		return tableNets;
+	}
+
+
+	public JTable getTableHosts() {
+		return tableHosts;
+	}
+
+
+	public JButton getBtnRestart() {
+		return btnRestart;
+	}
+
+
+	public JButton getBtnStatus() {
+		return btnStatus;
+	}
+
+
+	public JButton getBtnJournal() {
+		return btnJournal;
+	}
+
+
+	public JButton getBtnUploadConf() {
+		return btnUploadConf;
+	}
+
+
+	public JButton getBtnDownloadConf() {
+		return btnDownloadConf;
+	}
+
+
+	public JTextPane getTextPaneDatosDelServidor() {
+		return textPaneDatosDelServidor;
+	}
+
+
+	public JTextPane getTextPaneGlobal() {
+		return textPaneGlobal;
+	}
+
+
+	public JTextPane getTextPaneInfo() {
+		return textPaneInfo;
+	}
+
+
+	public JButton getBtnSave() {
+		return btnSave;
+	}
+
+
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
+
+	public JButton getBtnAdd() {
+		return btnAdd;
+	}
+
+
+	public JButton getBtnEdit() {
+		return btnEdit;
+	}
+
+
+	public JButton getBtnDelete() {
+		return btnDelete;
+	}
+
+
+	public JButton getBtnRefreshNets() {
+		return btnRefreshNets;
+	}
+
+
+	public JComboBox getComboBox() {
+		return comboBox;
+	}
+
+
+	public JButton getBtnFreeIPs() {
+		return btnFreeIPs;
+	}
+
+
+	public JButton getBtnRefreshHosts() {
+		return btnRefreshHosts;
+	}
+
+
+	public JButton getBtnHostsCancel() {
+		return btnHostsCancel;
+	}
+
+
+	public JButton getBtnEdit_1() {
+		return btnEdit_1;
+	}
+
+
+	public JButton getBtnDelete_1() {
+		return btnDelete_1;
+	}
+
+
+	public JLabel getLabelHostsDisponibles() {
+		return labelHostsDisponibles;
+	}
+	
 }
