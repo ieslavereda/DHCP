@@ -19,9 +19,10 @@ public class Principal extends JFrame {
 	private JPanel contentPane;
 	private JMenuItem mntmExit;
 	private JDesktopPane desktop;
-	private JMenuItem mntmSesion;
+	private JMenuItem mntmIniciarSesion;
 	private JMenuItem mntmConfiguracion;
 	private JMenuItem mntmDHCP;
+	private JMenuItem mntmCerrarSesion;
 
 
 	/**
@@ -46,12 +47,16 @@ public class Principal extends JFrame {
 		mnNewMenu.setIcon(new ImageIcon(Principal.class.getResource("/es/ieslavereda/DHCP/images/sesion40.png")));
 		menuBar.add(mnNewMenu);
 		
-		mntmSesion = new JMenuItem("Iniciar sesion");
-		mnNewMenu.add(mntmSesion);
-		mntmSesion.setIcon(null);
-		mntmSesion.setSelectedIcon(new ImageIcon(Principal.class.getResource("/es/ieslavereda/DHCP/images/sesion40.png")));
-		mntmSesion.setMaximumSize(new Dimension(91, 50));
-		mntmSesion.setPreferredSize(new Dimension(91, 30));
+		mntmIniciarSesion = new JMenuItem("Iniciar sesion");
+		mnNewMenu.add(mntmIniciarSesion);
+		mntmIniciarSesion.setIcon(null);
+		mntmIniciarSesion.setSelectedIcon(new ImageIcon(Principal.class.getResource("/es/ieslavereda/DHCP/images/sesion40.png")));
+		mntmIniciarSesion.setMaximumSize(new Dimension(1009, 50));
+		mntmIniciarSesion.setPreferredSize(new Dimension(91, 30));
+		
+		mntmCerrarSesion = new JMenuItem("Cerrar sesion");
+		mntmCerrarSesion.setEnabled(false);
+		mnNewMenu.add(mntmCerrarSesion);
 		
 		mntmConfiguracion = new JMenuItem("Configuracion");
 		mntmConfiguracion.setEnabled(false);
@@ -61,7 +66,6 @@ public class Principal extends JFrame {
 		
 		mntmDHCP = new JMenuItem("DHCP");
 		mntmDHCP.setIcon(new ImageIcon(Principal.class.getResource("/es/ieslavereda/DHCP/images/dhcp40.png")));
-		mntmDHCP.setEnabled(false);
 		mntmDHCP.setMaximumSize(new Dimension(100, 100));
 		menuBar.add(mntmDHCP);
 		contentPane = new JPanel();
@@ -83,7 +87,7 @@ public class Principal extends JFrame {
 	}
 
 	public JMenuItem getMntmSesion() {
-		return mntmSesion;
+		return mntmIniciarSesion;
 	}
 
 	public JMenuItem getMntmConfiguracion() {
@@ -92,6 +96,16 @@ public class Principal extends JFrame {
 
 	public JMenuItem getMntmDHCP() {
 		return mntmDHCP;
+	}
+
+
+	public JMenuItem getMntmIniciarSesion() {
+		return mntmIniciarSesion;
+	}
+
+
+	public JMenuItem getMntmCerrarSesion() {
+		return mntmCerrarSesion;
 	}
 	
 }

@@ -3,6 +3,9 @@ package es.ieslavereda.DHCP.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFileChooser;
+
+import es.ieslavereda.DHCP.model.ConfiguracionDHCP;
 import es.ieslavereda.DHCP.model.Model;
 import es.ieslavereda.DHCP.view.JIFDHCP;
 
@@ -10,6 +13,7 @@ public class ControladorJIFDHCP implements ActionListener{
 	
 	private JIFDHCP view;
 	private Model model;
+	private ConfiguracionDHCP conf;
 	
 	public ControladorJIFDHCP(JIFDHCP view, Model model) {
 		super();
@@ -48,8 +52,27 @@ public class ControladorJIFDHCP implements ActionListener{
 
 	private void openFile() {
 		
+		JFileChooser jfc = new JFileChooser();
+		
+		int option = jfc.showOpenDialog(view);
+		
+		if(option==JFileChooser.APPROVE_OPTION) {
+			
+			conf = model.cargarConfiguracion(jfc.getSelectedFile());
+			actualizarVistas();
+			
+		}
 		
 		
 	}
+
+	private void actualizarVistas() {
+		
+		view.getTextPaneGlobal().setText(conf.getGlobal());
+		view.getTextPaneInfo().setText(conf.getInfo());
+		
+	}
+	
+	
 
 }

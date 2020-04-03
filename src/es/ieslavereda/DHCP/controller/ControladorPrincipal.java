@@ -48,12 +48,14 @@ public class ControladorPrincipal implements ActionListener {
 		view.getMntmSesion().addActionListener(this);
 		view.getMntmConfiguracion().addActionListener(this);
 		view.getMntmDHCP().addActionListener(this);
+		view.getMntmCerrarSesion().addActionListener(this);
 
 		// Añadir los ActionCommand
 		view.getMntmExit().setActionCommand("Exit");
 		view.getMntmSesion().setActionCommand("Abrir JIFrame Login");
 		view.getMntmConfiguracion().setActionCommand("Abrir JIFProperties");
 		view.getMntmDHCP().setActionCommand("Abrir DHCP Manager");
+		view.getMntmCerrarSesion().setActionCommand("Cerrar sesion");
 
 	}
 
@@ -70,123 +72,140 @@ public class ControladorPrincipal implements ActionListener {
 			view.dispose();
 		} else if (command.equals("Abrir JIFrame Login")) {
 			abrirJIFrameSesion();
-		}  else if (command.equals("Login OK")) {
+		} else if (command.equals("Login OK")) {
 			iniciarSesion();
 		} else if (command.equals("Abrir JIFProperties")) {
 			openProperties();
 		} else if (command.equals("Abrir DHCP Manager")) {
 			openDHCP();
-		}else if (command.equals("Save properties")) {
+		} else if (command.equals("Save properties")) {
 			saveProperties();
+		} else if (command.equals("Cerrar sesion")) {
+			deshabilitarInicioSesion();
 		}
-		
+
 	}
 
 	private void saveProperties() {
-		
-		int option = JOptionPane.showConfirmDialog(jifProperties, "Estas usted seguro de guardar la configuracion", "Guardar configuracion", JOptionPane.YES_NO_OPTION);
-		
-		if(option == JOptionPane.YES_OPTION) {
+
+		int option = JOptionPane.showConfirmDialog(jifProperties, "Estas usted seguro de guardar la configuracion",
+				"Guardar configuracion", JOptionPane.YES_NO_OPTION);
+
+		if (option == JOptionPane.YES_OPTION) {
 			String login = jifProperties.getTextFieldLogin().getText();
 			String passwd = String.valueOf(jifProperties.getPasswordField().getPassword());
-			InetAddress IP=null;
+			InetAddress IP = null;
 			int port = Integer.parseInt(jifProperties.getTextFieldPort().getText());
-			
+
 			try {
-				
+
 				IP = InetAddress.getByName(jifProperties.getTextFieldIP().getText());
-				if(model.saveProperties(login, passwd, IP, port))
-					JOptionPane.showMessageDialog(jifProperties, "Datos grabados", "Guardar configuracion", JOptionPane.INFORMATION_MESSAGE);
-				
+				if (model.saveProperties(login, passwd, IP, port))
+					JOptionPane.showMessageDialog(jifProperties, "Datos grabados", "Guardar configuracion",
+							JOptionPane.INFORMATION_MESSAGE);
+
 			} catch (UnknownHostException e) {
-				JOptionPane.showMessageDialog(jifProperties, "Se ha producido un error. Compruebe la direccio IP", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(jifProperties, "Se ha producido un error. Compruebe la direccio IP",
+						"Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
-			
-			
+
 		}
-		
-		
+
 	}
 
 	private void openDHCP() {
-		
-		if(!estaAbierto(jifDHCP)) {
-			
+
+		if (!estaAbierto(jifDHCP)) {
+
 			jifDHCP = new JIFDHCP();
 			view.getDesktop().add(jifDHCP);
-			
-			
-			new ControladorJIFDHCP(jifDHCP,model).go();		
-			
+
+			new ControladorJIFDHCP(jifDHCP, model).go();
+
 		}
-		
+
 	}
 
 	private void openProperties() {
-		
-		if(!estaAbierto(jifProperties)) {
-			jifProperties = new JIFProperties();			
+
+		if (!estaAbierto(jifProperties)) {
+			jifProperties = new JIFProperties();
 			view.getDesktop().add(jifProperties);
 			jifProperties.setVisible(true);
-			
+
 			// Add Listener
 			jifProperties.getBtnSave().addActionListener(this);
-			
+
 			// Add command
 			jifProperties.getBtnSave().setActionCommand("Save properties");
-			
+
 			jifProperties.getTextFieldLogin().setText(model.getLogin());
 			jifProperties.getTextFieldIP().setText(model.getIP());
 			jifProperties.getTextFieldPort().setText(model.getPort());
 			jifProperties.getPasswordField().setText(model.getPassword());
-			
+
 		}
-		
+
 	}
 
 	private void iniciarSesion() {
-		
+
 		String login = jifLogin.getTextFieldLogin().getText();
 		String passwd = String.valueOf(jifLogin.getPasswordField().getPassword());
-		
-		if(model.comprobarLogin(login, passwd)) {
+
+		if (model.comprobarLogin(login, passwd)) {
 			jifLogin.dispose();
 			JOptionPane.showMessageDialog(null, "Usuario correcto!", "Info", JOptionPane.INFORMATION_MESSAGE);
-			habilitarOpciones();
-			
-		}else {
+			habilitarInicioSesion();
+
+		} else {
 			JOptionPane.showMessageDialog(null, "Usuario incorrecto!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 	}
 
-	private void habilitarOpciones() {
-		
+	private void habilitarInicioSesion() {
+
 		view.getMntmConfiguracion().setEnabled(true);
 		view.getMntmDHCP().setEnabled(true);
-		
+		view.getMntmIniciarSesion().setEnabled(false);
+		view.getMntmCerrarSesion().setEnabled(true);
+
 	}
-	private void deshabilitarOpciones() {
-		
-		view.getMntmConfiguracion().setEnabled(false);
-		view.getMntmDHCP().setEnabled(false);
-		
+
+	private void deshabilitarInicioSesion() {
+
+		int opcion = JOptionPane.showConfirmDialog(view, "Esta usted seguro de cerrar la sesion?", "Cerrar sesion",
+				JOptionPane.YES_NO_OPTION);
+
+		if (opcion == JOptionPane.YES_OPTION) {
+			
+			view.getMntmConfiguracion().setEnabled(false);
+			view.getMntmDHCP().setEnabled(false);
+			view.getMntmIniciarSesion().setEnabled(true);
+			view.getMntmCerrarSesion().setEnabled(false);
+			
+			JInternalFrame[] frames = view.getDesktop().getAllFrames();
+			for (JInternalFrame frame : frames)
+				frame.dispose();
+		}
+
 	}
 
 	private void abrirJIFrameSesion() {
-				
-		if (!estaAbierto(jifLogin)) {				
+
+		if (!estaAbierto(jifLogin)) {
 			jifLogin = new JIFLogin();
 			jifLogin.setVisible(true);
 			view.getDesktop().add(jifLogin);
-			
+
 			// Añadir ActionListener
 			jifLogin.getBtnOk().addActionListener(this);
-			
+
 			// Añadir ActionCommand
 			jifLogin.getBtnOk().setActionCommand("Login OK");
-			
+
 		}
 	}
 

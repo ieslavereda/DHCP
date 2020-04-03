@@ -1,8 +1,11 @@
 package es.ieslavereda.DHCP.model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
@@ -56,8 +59,8 @@ public class Model {
 			port = 5555;
 			login = "admin";
 			passwd = "admin";
-			
-			saveProperties(login,passwd,IP,port);
+
+			saveProperties(login, passwd, IP, port);
 
 		}
 	}
@@ -90,19 +93,68 @@ public class Model {
 			properties.setProperty("port", String.valueOf(port));
 
 			properties.store(new FileOutputStream(FILE), "Propiedades de mi aplicacion");
-			save=true;
+			save = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return save;
 	}
-		
+
 	public ConfiguracionDHCP cargarConfiguracion(File file) {
-		return new ConfiguracionDHCP();
+
+		dhcp = new ConfiguracionDHCP();
+
+		BufferedReader br = null;
+
+		try {
+
+			br = new BufferedReader(new FileReader(file));
+
+			String linea = "";
+			while ((linea = br.readLine()) != null) {
+				linea = linea.replace("  ", " ").trim();
+
+				if (linea.contains("# Configuracion global")) {
+					cargarGlobal(br);
+				} else if (linea.contains("# Informacion")) {
+					cargarInfo(br);
+				}
+
+			}
+
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (br != null)
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+
+		return dhcp;
 	}
-	
-	
-	
+
+	private void cargarGlobal(BufferedReader br) throws IOException {
+		String linea = "";
+
+		while ((linea = br.readLine()) != null && !linea.contains("# Fin Configuracion global")) {
+			dhcp.addLineToGlobal(linea);
+		}
+	}
+
+	private void cargarInfo(BufferedReader br) throws IOException {
+
+		String linea = "";
+
+		while ((linea = br.readLine()) != null && !linea.contains("# Fin Informacion")) {
+			linea = linea.replaceAll("#","").trim();
+			dhcp.addLineToInfo(linea);
+		}
+
+	}
 
 }
