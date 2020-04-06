@@ -71,6 +71,8 @@ public class ControladorJIFDHCP implements ActionListener{
 		view.getTextPaneGlobal().setText(conf.getGlobal());
 		view.getTextPaneInfo().setText(conf.getInfo());
 		
+		
+		
 	}
 	
 	

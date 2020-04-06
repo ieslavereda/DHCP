@@ -8,7 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Properties;
+
+import es.ieslavereda.DHCP.common.SubNet;
 
 public class Model {
 
@@ -119,6 +122,8 @@ public class Model {
 					cargarGlobal(br);
 				} else if (linea.contains("# Informacion")) {
 					cargarInfo(br);
+				} else if (linea.contains("subnet")) {
+					cargarRed(br,linea);
 				}
 
 			}
@@ -136,6 +141,51 @@ public class Model {
 		}
 
 		return dhcp;
+	}
+
+	private void cargarRed(BufferedReader br, String linea) {
+		
+		try {
+			
+			InetAddress net = InetAddress.getByName(linea.split(" ")[1]);
+			InetAddress netmask =  InetAddress.getByName(linea.split(" ")[3]);
+			
+			while ((linea = br.readLine()) != null && !linea.contains("}") ) {
+				linea = linea.replace("  ", " ").trim();
+
+				if (linea.contains("option domain-name-servers")) {
+				//
+				} else if (linea.contains("option routers")) {
+					//
+				} else if (linea.contains("option ntp-servers")) {
+					//
+				} else if (linea.contains("option netbios-name-servers")) {
+					//
+				}else if (linea.contains("range ")) {
+					//
+				}else if (linea.contains("default-lease-time")) {
+					//
+				}else if (linea.contains("max-lease-time")) {
+					//
+				} else if (linea.contains("##")) {
+					//
+				}
+
+			}
+			
+			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers, ntpServer, range,pool, defaultLeaseTime, maxLeaseTime);
+			
+			dhcp.addSubNet(subnet);
+			
+			System.out.println(net.getHostAddress());
+			System.out.println(netmask.getHostAddress());
+			
+		} catch (UnknownHostException e) {			
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void cargarGlobal(BufferedReader br) throws IOException {

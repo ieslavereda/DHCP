@@ -1,15 +1,20 @@
 package es.ieslavereda.DHCP.model;
 
+import java.util.TreeSet;
+
+import es.ieslavereda.DHCP.common.SubNet;
+
 public class ConfiguracionDHCP {
 
 	private String global;
 	private String info;
-	// redes
-
+	private TreeSet<SubNet> redes;
+	
 	public ConfiguracionDHCP() {
 		super();
 		global = "";
 		info = "";
+		redes = new TreeSet<SubNet>();
 	}
 
 	public void addLineToInfo(String line) {
@@ -28,6 +33,8 @@ public class ConfiguracionDHCP {
 		return info;
 	}
 	
-	
+	public boolean addSubNet(SubNet net) {
+		return redes.add(net);
+	}
 
 }
