@@ -123,7 +123,7 @@ public class Model {
 				} else if (linea.contains("# Informacion")) {
 					cargarInfo(br);
 				} else if (linea.contains("subnet")) {
-					cargarRed(br,linea);
+					cargarRed(br, linea);
 				}
 
 			}
@@ -144,48 +144,58 @@ public class Model {
 	}
 
 	private void cargarRed(BufferedReader br, String linea) {
-		
+
 		try {
-			
+
 			InetAddress net = InetAddress.getByName(linea.split(" ")[1]);
-			InetAddress netmask =  InetAddress.getByName(linea.split(" ")[3]);
-			
-			while ((linea = br.readLine()) != null && !linea.contains("}") ) {
-				linea = linea.replace("  ", " ").trim();
+			InetAddress netmask = InetAddress.getByName(linea.split(" ")[3]);
+			String comment = "";
+			ArrayList<InetAddress> optionDomainNameServer = new ArrayList<InetAddress>();
+			InetAddress routers = null;
+			ArrayList<InetAddress> range = new ArrayList<InetAddress>();
+			boolean pool = false;
+
+			while ((linea = br.readLine()) != null && !linea.contains("}")) {
+				linea = linea.replace("  ", " ").replaceAll(";","").replaceAll(",", "").trim();
 
 				if (linea.contains("option domain-name-servers")) {
-				//
+					optionDomainNameServer.add(InetAddress.getByName(linea.split(" ")[2]));
+					optionDomainNameServer.add(InetAddress.getByName(linea.split(" ")[3]));					
 				} else if (linea.contains("option routers")) {
-					//
+					routers = InetAddress.getByName(linea.split(" ")[2]);
 				} else if (linea.contains("option ntp-servers")) {
 					//
 				} else if (linea.contains("option netbios-name-servers")) {
 					//
-				}else if (linea.contains("range ")) {
+				} else if (linea.contains("range ")) {
+					pool = (linea.contains("#"))?false:true;
+					linea = linea.replaceAll("#", "").trim();
+					range.add(InetAddress.getByName(linea.split(" ")[1]));
+					range.add(InetAddress.getByName(linea.split(" ")[2]));
+				} else if (linea.contains("default-lease-time")) {
 					//
-				}else if (linea.contains("default-lease-time")) {
-					//
-				}else if (linea.contains("max-lease-time")) {
+				} else if (linea.contains("max-lease-time")) {
 					//
 				} else if (linea.contains("##")) {
-					//
+					comment+=linea.replaceAll("##",	"").trim();
 				}
 
 			}
-			
-			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers, ntpServer, range,pool, defaultLeaseTime, maxLeaseTime);
-			
+
+			//SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers, ntpServer, range, pool, defaultLeaseTime, maxLeaseTime);
+			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer,routers, range, pool);
+
 			dhcp.addSubNet(subnet);
+
+			System.out.println(subnet);
 			
-			System.out.println(net.getHostAddress());
-			System.out.println(netmask.getHostAddress());
-			
-		} catch (UnknownHostException e) {			
+
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void cargarGlobal(BufferedReader br) throws IOException {
@@ -201,7 +211,7 @@ public class Model {
 		String linea = "";
 
 		while ((linea = br.readLine()) != null && !linea.contains("# Fin Informacion")) {
-			linea = linea.replaceAll("#","").trim();
+			linea = linea.replaceAll("#", "").trim();
 			dhcp.addLineToInfo(linea);
 		}
 

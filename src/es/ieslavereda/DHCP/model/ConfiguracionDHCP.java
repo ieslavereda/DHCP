@@ -33,6 +33,10 @@ public class ConfiguracionDHCP {
 		return info;
 	}
 	
+	public TreeSet<SubNet> getRedes() {
+		return redes;
+	}
+
 	public boolean addSubNet(SubNet net) {
 		return redes.add(net);
 	}

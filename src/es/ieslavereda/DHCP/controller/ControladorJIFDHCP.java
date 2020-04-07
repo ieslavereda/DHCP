@@ -2,9 +2,12 @@ package es.ieslavereda.DHCP.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
 
+import es.ieslavereda.DHCP.common.SubNet;
 import es.ieslavereda.DHCP.model.ConfiguracionDHCP;
 import es.ieslavereda.DHCP.model.Model;
 import es.ieslavereda.DHCP.view.JIFDHCP;
@@ -70,6 +73,22 @@ public class ControladorJIFDHCP implements ActionListener{
 		
 		view.getTextPaneGlobal().setText(conf.getGlobal());
 		view.getTextPaneInfo().setText(conf.getInfo());
+		
+		
+		// Actualizar tabla redes
+		DefaultTableModel dtm = (DefaultTableModel)view.getTableNets().getModel();
+		
+		ArrayList<SubNet> redes = new ArrayList<SubNet>(conf.getRedes());
+		
+		for(SubNet red : redes) {
+			dtm.addRow(new String[] {
+					red.getComment(),
+					red.getNet().getHostAddress(),
+					red.getNetmask().getHostAddress(),
+					red.getRouters().getHostAddress(),
+					String.valueOf(red.isPool())
+			});
+		}
 		
 		
 		
