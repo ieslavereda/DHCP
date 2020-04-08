@@ -2,9 +2,12 @@ package es.ieslavereda.DHCP.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import es.ieslavereda.DHCP.common.SubNet;
@@ -31,10 +34,12 @@ public class ControladorJIFDHCP implements ActionListener{
 		// Añadimos action listener
 		view.getMntmOpen().addActionListener(this);
 		view.getMntmSave().addActionListener(this);
+		view.getBtnNetEdit().addActionListener(this);
 		
 		// Añadimos action command
 		view.getMntmOpen().setActionCommand("Open file");
 		view.getMntmSave().setActionCommand("Save file");
+		view.getBtnNetEdit().setActionCommand("Edit net");
 		
 	}
 	
@@ -49,6 +54,27 @@ public class ControladorJIFDHCP implements ActionListener{
 		
 		if(command.equals("Open file")) {
 			openFile();
+		}else if(command.equals("Edit net")) {
+			editNet();
+		}
+		
+	}
+
+	private void editNet() {
+		
+		if(view.getTableNets().getSelectedRow()==-1)
+			JOptionPane.showMessageDialog(view, "Debes seleccionar primero una red en la tabla", "Info", JOptionPane.INFORMATION_MESSAGE);
+		else {
+			int row = view.getTableNets().getSelectedRow();
+			try {
+				
+				InetAddress net = InetAddress.getByName(view.getTableNets().getValueAt(row, 1).toString());
+				
+				SubNet subnet = conf.getSubNetByNetworkAddress(net);
+				
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}

@@ -103,6 +103,15 @@ public class Model {
 
 		return save;
 	}
+	
+	public boolean guardarConfiguracion(File file,ConfiguracionDHCP conf) {
+		boolean guardado = false;
+		
+		// Guardar en archivo el toString de conf en el fichero file
+		
+		
+		return guardado;
+	}
 
 	public ConfiguracionDHCP cargarConfiguracion(File file) {
 
@@ -153,6 +162,10 @@ public class Model {
 			ArrayList<InetAddress> optionDomainNameServer = new ArrayList<InetAddress>();
 			InetAddress routers = null;
 			ArrayList<InetAddress> range = new ArrayList<InetAddress>();
+			InetAddress ntpServer = null;
+			InetAddress netbiosNameServer = null;
+			int defaultLeaseTime=0, maxLeaseTime=0;
+						
 			boolean pool = false;
 
 			while ((linea = br.readLine()) != null && !linea.contains("}")) {
@@ -164,26 +177,25 @@ public class Model {
 				} else if (linea.contains("option routers")) {
 					routers = InetAddress.getByName(linea.split(" ")[2]);
 				} else if (linea.contains("option ntp-servers")) {
-					//
+					ntpServer = InetAddress.getByName(linea.split(" ")[2]);
 				} else if (linea.contains("option netbios-name-servers")) {
-					//
+					netbiosNameServer = InetAddress.getByName(linea.split(" ")[2]);
 				} else if (linea.contains("range ")) {
 					pool = (linea.contains("#"))?false:true;
 					linea = linea.replaceAll("#", "").trim();
 					range.add(InetAddress.getByName(linea.split(" ")[1]));
 					range.add(InetAddress.getByName(linea.split(" ")[2]));
 				} else if (linea.contains("default-lease-time")) {
-					//
+					defaultLeaseTime = Integer.parseInt(linea.split(" ")[1]);
 				} else if (linea.contains("max-lease-time")) {
-					//
+					maxLeaseTime = Integer.parseInt(linea.split(" ")[1]);
 				} else if (linea.contains("##")) {
 					comment+=linea.replaceAll("##",	"").trim();
 				}
 
 			}
 
-			//SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers, ntpServer, range, pool, defaultLeaseTime, maxLeaseTime);
-			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer,routers, range, pool);
+			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers,  ntpServer,  netbiosNameServer, range, pool,  defaultLeaseTime,  maxLeaseTime);
 
 			dhcp.addSubNet(subnet);
 

@@ -12,40 +12,32 @@ public class SubNet implements Comparable{
 	private ArrayList<InetAddress> optionDomainNameServer;
 	private InetAddress routers;
 	private InetAddress ntpServer;
+	private InetAddress netbiosNameServer;
 	private ArrayList<InetAddress> range;
 	private boolean pool;
 	private int defaultLeaseTime;
 	private int maxLeaseTime;
 	private TreeSet<Host> hosts;
 
-//	public SubNet(InetAddress net, InetAddress netmask, String comment, ArrayList<InetAddress> optionDomainNameServer,
-//			InetAddress routers, InetAddress ntpServer, ArrayList<InetAddress> range, boolean pool,
-//			int defaultLeaseTime, int maxLeaseTime, TreeSet<Host> hosts) {
-//		super();
-//		this.net = net;
-//		this.netmask = netmask;
-//		this.comment = comment;
-//		this.optionDomainNameServer = optionDomainNameServer;
-//		this.routers = routers;
-//		this.ntpServer = ntpServer;
-//		this.range = range;
-//		this.pool = pool;
-//		this.defaultLeaseTime = defaultLeaseTime;
-//		this.maxLeaseTime = maxLeaseTime;
-//		this.hosts = hosts;
-//		
-//		hosts = new TreeSet<Host>();
-//	}
 
-	public SubNet(InetAddress net, InetAddress netmask,String comment,ArrayList<InetAddress> optionDomainNameServer,InetAddress routers, ArrayList<InetAddress> range, boolean pool) {
+
+	public SubNet(InetAddress net, InetAddress netmask, String comment, ArrayList<InetAddress> optionDomainNameServer,
+			InetAddress routers, InetAddress ntpServer, InetAddress netbiosNameServer, ArrayList<InetAddress> range,
+			boolean pool, int defaultLeaseTime, int maxLeaseTime) {
 		super();
 		this.net = net;
 		this.netmask = netmask;
 		this.comment = comment;
 		this.optionDomainNameServer = optionDomainNameServer;
 		this.routers = routers;
+		this.ntpServer = ntpServer;
+		this.netbiosNameServer = netbiosNameServer;
 		this.range = range;
 		this.pool = pool;
+		this.defaultLeaseTime = defaultLeaseTime;
+		this.maxLeaseTime = maxLeaseTime;
+		
+		hosts = new TreeSet<Host>();
 	}
 
 	public InetAddress getNet() {
@@ -98,7 +90,11 @@ public class SubNet implements Comparable{
 				"## " + comment + "\n" +
 				"  option domain-name-servers " + optionDomainNameServer.get(0).getHostAddress()+ ", "+optionDomainNameServer.get(1).getHostAddress()+ ";" + "\n"+
 				"  option routers " + routers.getHostAddress() + ";" + "\n" +
+				"  option ntp-servers " + ntpServer.getHostAddress()+";"+"\n"+
+				"  option netbios-name-servers " + netbiosNameServer.getHostAddress() + ";" + "\n"+
 				((pool)?"":"#")+"  range " + range.get(0).getHostAddress() +  " "+range.get(0).getHostAddress()+";"+  "\n"+
+				  "  default-lease-time " + defaultLeaseTime +";"+"\n"+
+				  "  max-lease-time " + maxLeaseTime +";"+"\n"+
 				"}" + "\n";
 	}
 

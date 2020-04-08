@@ -41,7 +41,7 @@ public class JIFDHCP extends JInternalFrame {
 	private JButton btnSave;
 	private JButton btnCancelar;
 	private JButton btnAdd;
-	private JButton btnEdit;
+	private JButton btnNetEdit;
 	private JButton btnDelete;
 	private JButton btnRefreshNets;
 	private JComboBox comboBox;
@@ -60,7 +60,7 @@ public class JIFDHCP extends JInternalFrame {
 	 */
 	public JIFDHCP() {
 		setTitle("DHCP");
-		setBounds(100, 100, 910, 582);
+		setBounds(100, 100, 910, 594);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -236,12 +236,12 @@ public class JIFDHCP extends JInternalFrame {
 		JPanel panel_3 = new JPanel();
 		GroupLayout gl_panelNets = new GroupLayout(panelNets);
 		gl_panelNets.setHorizontalGroup(
-			gl_panelNets.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panelNets.createSequentialGroup()
+			gl_panelNets.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panelNets.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panelNets.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
-						.addComponent(panel_3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE))
+						.addComponent(panel_3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
+						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panelNets.setVerticalGroup(
@@ -250,8 +250,8 @@ public class JIFDHCP extends JInternalFrame {
 					.addContainerGap()
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 445, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(19, Short.MAX_VALUE))
 		);
 		panel_3.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
@@ -261,8 +261,8 @@ public class JIFDHCP extends JInternalFrame {
 		btnDelete = new JButton("Delete");
 		panel_3.add(btnDelete);
 		
-		btnEdit = new JButton("Edit");
-		panel_3.add(btnEdit);
+		btnNetEdit = new JButton("Edit");
+		panel_3.add(btnNetEdit);
 		
 		btnAdd = new JButton("Add");
 		panel_3.add(btnAdd);
@@ -454,8 +454,8 @@ public class JIFDHCP extends JInternalFrame {
 	}
 
 
-	public JButton getBtnEdit() {
-		return btnEdit;
+	public JButton getBtnNetEdit() {
+		return btnNetEdit;
 	}
 
 
