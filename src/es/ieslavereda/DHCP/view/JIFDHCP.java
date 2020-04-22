@@ -59,6 +59,7 @@ public class JIFDHCP extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public JIFDHCP() {
+		setClosable(true);
 		setTitle("DHCP");
 		setBounds(100, 100, 910, 594);
 		

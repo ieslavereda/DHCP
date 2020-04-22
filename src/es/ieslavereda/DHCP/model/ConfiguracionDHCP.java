@@ -1,6 +1,7 @@
 package es.ieslavereda.DHCP.model;
 
 import java.net.InetAddress;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import es.ieslavereda.DHCP.common.SubNet;
@@ -42,6 +43,19 @@ public class ConfiguracionDHCP {
 		return redes.add(net);
 	}
 	
+	public void eliminarRed(InetAddress red) {
+		
+		Iterator<SubNet> it = redes.iterator();
+		SubNet subnet;
+		
+		while(it.hasNext()) {			
+			subnet = it.next();			
+			if(subnet.getNet().getHostAddress().equals(red.getHostAddress()))
+				it.remove();
+		}
+				
+	}
+	
 	public SubNet getSubNetByNetworkAddress(InetAddress address) {
 		
 		SubNet net =  null;
@@ -68,5 +82,6 @@ public class ConfiguracionDHCP {
 				
 		return salida;		
 	}
+
 
 }

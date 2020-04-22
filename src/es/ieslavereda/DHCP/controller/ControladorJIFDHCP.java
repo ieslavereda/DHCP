@@ -35,11 +35,13 @@ public class ControladorJIFDHCP implements ActionListener{
 		view.getMntmOpen().addActionListener(this);
 		view.getMntmSave().addActionListener(this);
 		view.getBtnNetEdit().addActionListener(this);
+		view.getBtnDelete().addActionListener(this);
 		
 		// Añadimos action command
 		view.getMntmOpen().setActionCommand("Open file");
 		view.getMntmSave().setActionCommand("Save file");
 		view.getBtnNetEdit().setActionCommand("Edit net");
+		view.getBtnDelete().setActionCommand("Delete Net");
 		
 	}
 	
@@ -56,7 +58,32 @@ public class ControladorJIFDHCP implements ActionListener{
 			openFile();
 		}else if(command.equals("Edit net")) {
 			editNet();
+		}else if(command.equals("Delete Net")) {
+			removeNet();
 		}
+		
+	}
+
+	private void removeNet() {
+		
+		int row = view.getTableNets().getSelectedRow();
+		int column = 1;
+		
+		String hostAddress = view.getTableNets().getValueAt(row, column).toString();
+		
+		try {
+			
+			System.out.println(hostAddress);
+			
+			conf.eliminarRed(InetAddress.getByName(hostAddress));
+			
+			actualizarVistas();
+			
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 
@@ -102,7 +129,13 @@ public class ControladorJIFDHCP implements ActionListener{
 		
 		
 		// Actualizar tabla redes
-		DefaultTableModel dtm = (DefaultTableModel)view.getTableNets().getModel();
+		DefaultTableModel dtm = new DefaultTableModel();
+		
+		dtm.addColumn("Descripcion");
+		dtm.addColumn("Netword adress");
+		dtm.addColumn("Masc");
+		dtm.addColumn("Router");
+		dtm.addColumn("Pool");
 		
 		ArrayList<SubNet> redes = new ArrayList<SubNet>(conf.getRedes());
 		
@@ -116,8 +149,8 @@ public class ControladorJIFDHCP implements ActionListener{
 			});
 		}
 		
-		
-		
+		view.getTableNets().setModel(dtm);
+			
 	}
 	
 	
