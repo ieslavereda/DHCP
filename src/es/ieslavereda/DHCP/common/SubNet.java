@@ -39,6 +39,12 @@ public class SubNet implements Comparable{
 		
 		hosts = new TreeSet<Host>();
 	}
+	
+
+	public InetAddress getNetbiosNameServer() {
+		return netbiosNameServer;
+	}
+
 
 	public InetAddress getNet() {
 		return net;
@@ -83,6 +89,67 @@ public class SubNet implements Comparable{
 	public TreeSet<Host> getHosts() {
 		return hosts;
 	}
+	
+
+	public void setNet(InetAddress net) {
+		this.net = net;
+	}
+
+
+	public void setNetmask(InetAddress netmask) {
+		this.netmask = netmask;
+	}
+
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+
+	public void setOptionDomainNameServer(ArrayList<InetAddress> optionDomainNameServer) {
+		this.optionDomainNameServer = optionDomainNameServer;
+	}
+
+
+	public void setRouters(InetAddress routers) {
+		this.routers = routers;
+	}
+
+
+	public void setNtpServer(InetAddress ntpServer) {
+		this.ntpServer = ntpServer;
+	}
+
+
+	public void setNetbiosNameServer(InetAddress netbiosNameServer) {
+		this.netbiosNameServer = netbiosNameServer;
+	}
+
+
+	public void setRange(ArrayList<InetAddress> range) {
+		this.range = range;
+	}
+
+
+	public void setPool(boolean pool) {
+		this.pool = pool;
+	}
+
+
+	public void setDefaultLeaseTime(int defaultLeaseTime) {
+		this.defaultLeaseTime = defaultLeaseTime;
+	}
+
+
+	public void setMaxLeaseTime(int maxLeaseTime) {
+		this.maxLeaseTime = maxLeaseTime;
+	}
+
+
+	public void setHosts(TreeSet<Host> hosts) {
+		this.hosts = hosts;
+	}
+
 
 	@Override
 	public String toString() {
@@ -92,7 +159,7 @@ public class SubNet implements Comparable{
 				"  option routers " + routers.getHostAddress() + ";" + "\n" +
 				"  option ntp-servers " + ntpServer.getHostAddress()+";"+"\n"+
 				"  option netbios-name-servers " + netbiosNameServer.getHostAddress() + ";" + "\n"+
-				((pool)?"":"#")+"  range " + range.get(0).getHostAddress() +  " "+range.get(0).getHostAddress()+";"+  "\n"+
+				((pool)?"":"#")+"  range " + range.get(0).getHostAddress() +  " "+range.get(1).getHostAddress()+";"+  "\n"+
 				  "  default-lease-time " + defaultLeaseTime +";"+"\n"+
 				  "  max-lease-time " + maxLeaseTime +";"+"\n"+
 				"}" + "\n";
