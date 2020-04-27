@@ -121,7 +121,7 @@ public class ControladorPrincipal implements ActionListener {
 			jifDHCP = new JIFDHCP();
 			view.getDesktop().add(jifDHCP);
 
-			new ControladorJIFDHCP(jifDHCP, model).go();
+			new ControladorJIFDHCP(jifDHCP, model,view).go();
 
 		}
 

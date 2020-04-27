@@ -4,6 +4,8 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import org.apache.commons.net.util.SubnetUtils;
+
 public class SubNet implements Comparable{
 
 	private InetAddress net;
@@ -38,6 +40,15 @@ public class SubNet implements Comparable{
 		this.maxLeaseTime = maxLeaseTime;
 		
 		hosts = new TreeSet<Host>();
+	}
+	
+	public void addHost(Host host) {
+		hosts.add(host);
+	}
+	
+	public boolean isIpInSubnet(String ip) {
+		SubnetUtils utils = new SubnetUtils(net.getHostAddress(), netmask.getHostName());
+		return utils.getInfo().isInRange(ip);
 	}
 	
 
@@ -162,7 +173,7 @@ public class SubNet implements Comparable{
 				((pool)?"":"#")+"  range " + range.get(0).getHostAddress() +  " "+range.get(1).getHostAddress()+";"+  "\n"+
 				  "  default-lease-time " + defaultLeaseTime +";"+"\n"+
 				  "  max-lease-time " + maxLeaseTime +";"+"\n"+
-				"}" + "\n";
+				"}" + "\n" + hosts;
 	}
 
 	

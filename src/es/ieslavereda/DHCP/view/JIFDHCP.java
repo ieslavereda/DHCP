@@ -24,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.DefaultComboBoxModel;
 
 public class JIFDHCP extends JInternalFrame {
 	private JTextField textFieldPort;
