@@ -36,6 +36,7 @@ public class JFSubnet extends JInternalFrame {
 	private JButton btnCancelar;
 
 	public JFSubnet() {
+		setClosable(true);
 		setTitle("Net");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 461, 363);
