@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
 
+import es.ieslavereda.DHCP.common.Host;
 import es.ieslavereda.DHCP.common.SubNet;
 
 public class Model {
@@ -103,13 +105,12 @@ public class Model {
 
 		return save;
 	}
-	
-	public boolean guardarConfiguracion(File file,ConfiguracionDHCP conf) {
+
+	public boolean guardarConfiguracion(File file, ConfiguracionDHCP conf) {
 		boolean guardado = false;
-		
+
 		// Guardar en archivo el toString de conf en el fichero file
-		
-		
+
 		return guardado;
 	}
 
@@ -123,6 +124,7 @@ public class Model {
 
 			br = new BufferedReader(new FileReader(file));
 
+			String comentario = "";
 			String linea = "";
 			while ((linea = br.readLine()) != null) {
 				linea = linea.replace("  ", " ").trim();
@@ -131,8 +133,13 @@ public class Model {
 					cargarGlobal(br);
 				} else if (linea.contains("# Informacion")) {
 					cargarInfo(br);
+				} else if (linea.contains("#")) {
+					comentario = linea;
 				} else if (linea.contains("subnet")) {
 					cargarRed(br, linea);
+				} else if (linea.contains("host")) {
+					cargarHost(br, linea, comentario);
+					comentario = "";
 				}
 
 			}
@@ -152,6 +159,68 @@ public class Model {
 		return dhcp;
 	}
 
+	private void cargarHost(BufferedReader br, String linea, String comentario) {
+
+		try {
+
+			String host = linea.split(" ")[1];
+			String comment = comentario;
+			InetAddress fixedAddress=null;
+			String hardwareEthernet="";
+			InetAddress routers=null;
+			ArrayList<InetAddress> domainNameServers = new ArrayList<InetAddress>();
+
+			boolean pool = false;
+
+			while ((linea = br.readLine()) != null && !linea.contains("}")) {
+				linea = linea.replace("  ", " ").replaceAll(";", "").replaceAll(",", "").trim();
+
+				if (linea.contains("fixed-address")) {
+					fixedAddress = InetAddress.getByName(linea.split(" ")[1]);
+				} else if (linea.contains("hardware ethernet")) {
+					hardwareEthernet = linea.split(" ")[1];
+				} else if (linea.contains("option routers")) {
+					routers = InetAddress.getByName(linea.split(" ")[2]);
+				} else if (linea.contains("option domain-name-servers")) {
+					domainNameServers.add(InetAddress.getByName(linea.split(" ")[2]));
+					domainNameServers.add(InetAddress.getByName(linea.split(" ")[3]));
+				}
+
+			}
+
+			Host h = new Host(host, comment, fixedAddress, hardwareEthernet, routers,domainNameServers);
+
+			addHostToNet(h);
+			
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void addHostToNet(Host h) {
+		
+		boolean insertado=false;
+		
+		Iterator<SubNet> it = dhcp.getRedes().iterator();
+		SubNet net;
+		
+		while(it.hasNext() && !insertado) {
+			net = it.next();
+			if(net.isIpInSubnet(h.getFixedAddress().getHostName())) {
+				net.addHost(h);
+				insertado=true;
+			}
+		}
+		
+		if(!insertado)
+			System.out.println("No se ha podido insertar el host: " + h);
+		
+	}
+
 	private void cargarRed(BufferedReader br, String linea) {
 
 		try {
@@ -164,16 +233,16 @@ public class Model {
 			ArrayList<InetAddress> range = new ArrayList<InetAddress>();
 			InetAddress ntpServer = null;
 			InetAddress netbiosNameServer = null;
-			int defaultLeaseTime=0, maxLeaseTime=0;
-						
+			int defaultLeaseTime = 0, maxLeaseTime = 0;
+
 			boolean pool = false;
 
 			while ((linea = br.readLine()) != null && !linea.contains("}")) {
-				linea = linea.replace("  ", " ").replaceAll(";","").replaceAll(",", "").trim();
+				linea = linea.replace("  ", " ").replaceAll(";", "").replaceAll(",", "").trim();
 
 				if (linea.contains("option domain-name-servers")) {
 					optionDomainNameServer.add(InetAddress.getByName(linea.split(" ")[2]));
-					optionDomainNameServer.add(InetAddress.getByName(linea.split(" ")[3]));					
+					optionDomainNameServer.add(InetAddress.getByName(linea.split(" ")[3]));
 				} else if (linea.contains("option routers")) {
 					routers = InetAddress.getByName(linea.split(" ")[2]);
 				} else if (linea.contains("option ntp-servers")) {
@@ -181,7 +250,7 @@ public class Model {
 				} else if (linea.contains("option netbios-name-servers")) {
 					netbiosNameServer = InetAddress.getByName(linea.split(" ")[2]);
 				} else if (linea.contains("range ")) {
-					pool = (linea.contains("#"))?false:true;
+					pool = (linea.contains("#")) ? false : true;
 					linea = linea.replaceAll("#", "").trim();
 					range.add(InetAddress.getByName(linea.split(" ")[1]));
 					range.add(InetAddress.getByName(linea.split(" ")[2]));
@@ -190,18 +259,17 @@ public class Model {
 				} else if (linea.contains("max-lease-time")) {
 					maxLeaseTime = Integer.parseInt(linea.split(" ")[1]);
 				} else if (linea.contains("##")) {
-					comment+=linea.replaceAll("##",	"").trim();
+					comment += linea.replaceAll("##", "").trim();
 				}
 
 			}
 
-			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers,  ntpServer,  netbiosNameServer, range, pool,  defaultLeaseTime,  maxLeaseTime);
+			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers, ntpServer,
+					netbiosNameServer, range, pool, defaultLeaseTime, maxLeaseTime);
 
 			dhcp.addSubNet(subnet);
 
-			System.out.println(subnet);
 			
-
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

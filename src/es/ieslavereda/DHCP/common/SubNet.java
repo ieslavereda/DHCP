@@ -21,8 +21,6 @@ public class SubNet implements Comparable{
 	private int maxLeaseTime;
 	private TreeSet<Host> hosts;
 
-
-
 	public SubNet(InetAddress net, InetAddress netmask, String comment, ArrayList<InetAddress> optionDomainNameServer,
 			InetAddress routers, InetAddress ntpServer, InetAddress netbiosNameServer, ArrayList<InetAddress> range,
 			boolean pool, int defaultLeaseTime, int maxLeaseTime) {

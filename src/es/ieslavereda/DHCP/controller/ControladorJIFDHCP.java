@@ -2,15 +2,19 @@ package es.ieslavereda.DHCP.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import es.ieslavereda.DHCP.common.Host;
 import es.ieslavereda.DHCP.common.SubNet;
 import es.ieslavereda.DHCP.model.ConfiguracionDHCP;
 import es.ieslavereda.DHCP.model.Model;
@@ -27,11 +31,11 @@ public class ControladorJIFDHCP implements ActionListener {
 	private JFSubnet jfSubnet;
 	private Principal principal;
 
-	public ControladorJIFDHCP(JIFDHCP view, Model model,Principal principal) {
+	public ControladorJIFDHCP(JIFDHCP view, Model model, Principal principal) {
 		super();
 		this.view = view;
 		this.model = model;
-		this.principal=principal;
+		this.principal = principal;
 
 		inicializar();
 	}
@@ -44,6 +48,7 @@ public class ControladorJIFDHCP implements ActionListener {
 		view.getBtnNetEdit().addActionListener(this);
 		view.getBtnDelete().addActionListener(this);
 		view.getBtnAdd().addActionListener(this);
+		view.getComboBox().addActionListener(this);
 
 		// Añadimos action command
 		view.getMntmOpen().setActionCommand("Open file");
@@ -51,6 +56,7 @@ public class ControladorJIFDHCP implements ActionListener {
 		view.getBtnNetEdit().setActionCommand("Edit net");
 		view.getBtnDelete().setActionCommand("Delete Net");
 		view.getBtnAdd().setActionCommand("Add Net");
+		view.getComboBox().setActionCommand("refresh combo");
 
 	}
 
@@ -73,12 +79,14 @@ public class ControladorJIFDHCP implements ActionListener {
 			actualizarRed();
 		} else if (command.equals("Add Net")) {
 			addNet();
-		}else if (command.equals("Add new net")) {
+		} else if (command.equals("Add new net")) {
 			addNewNet();
+		} else if (command.equals("refresh combo")) {
+			actualizarComboBox();
 		}
 
 	}
-	
+
 	private void addNewNet() {
 		try {
 			// Cargar datos del formulario
@@ -88,30 +96,32 @@ public class ControladorJIFDHCP implements ActionListener {
 			ArrayList<InetAddress> optionDomainNameServer = new ArrayList<InetAddress>();
 			optionDomainNameServer.add(0, InetAddress.getByName(jfSubnet.getTextFieldDNS1().getText()));
 			optionDomainNameServer.add(1, InetAddress.getByName(jfSubnet.getTextFieldDNS2().getText()));
-			InetAddress routers=InetAddress.getByName(jfSubnet.getTextFieldGateway().getText());
+			InetAddress routers = InetAddress.getByName(jfSubnet.getTextFieldGateway().getText());
 			InetAddress ntpServer = InetAddress.getByName(jfSubnet.getTextFieldNTP().getText());
 			InetAddress netbiosNameServer = InetAddress.getByName(jfSubnet.getTextFieldNetBios().getText());
 			ArrayList<InetAddress> range = new ArrayList<InetAddress>();
 			range.add(InetAddress.getByName(jfSubnet.getTextFieldRange1().getText()));
-			range.add(InetAddress.getByName(jfSubnet.getTextFieldRange2().getText()));			
+			range.add(InetAddress.getByName(jfSubnet.getTextFieldRange2().getText()));
 			boolean pool = jfSubnet.getChckbxRangeActive().isEnabled();
-			int defaultLeaseTime=1000;
-			int maxLeaseTime=1000;
+			int defaultLeaseTime = 1000;
+			int maxLeaseTime = 1000;
 
 			// Creamos la red
 			SubNet subnet = new SubNet(net, netmask, comment, optionDomainNameServer, routers, ntpServer,
 					netbiosNameServer, range, pool, defaultLeaseTime, maxLeaseTime);
-			
+
 			// Añadimos la red
 			conf.addSubNet(subnet);
-			
-			JOptionPane.showMessageDialog(jfSubnet, "Se ha añadido la red correctamente.", "Info", JOptionPane.INFORMATION_MESSAGE);
-			
+
+			JOptionPane.showMessageDialog(jfSubnet, "Se ha añadido la red correctamente.", "Info",
+					JOptionPane.INFORMATION_MESSAGE);
+
 			actualizarVistas();
 			jfSubnet.dispose();
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(jfSubnet, "Se ha producido un error inesperado", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(jfSubnet, "Se ha producido un error inesperado", "Error",
+					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -141,7 +151,7 @@ public class ControladorJIFDHCP implements ActionListener {
 			subnet.setNetbiosNameServer(InetAddress.getByName(jfSubnet.getTextFieldNetBios().getText()));
 			subnet.getRange().set(0, InetAddress.getByName(jfSubnet.getTextFieldRange1().getText()));
 			subnet.getRange().set(1, InetAddress.getByName(jfSubnet.getTextFieldRange2().getText()));
-			subnet.setPool(jfSubnet.getChckbxRangeActive().isEnabled());
+			subnet.setPool(jfSubnet.getChckbxRangeActive().isSelected());
 
 			jfSubnet.dispose();
 			actualizarVistas();
@@ -169,7 +179,6 @@ public class ControladorJIFDHCP implements ActionListener {
 			actualizarVistas();
 
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -238,9 +247,12 @@ public class ControladorJIFDHCP implements ActionListener {
 
 		}
 
+		System.out.println(conf);
 	}
 
 	private void actualizarVistas() {
+
+		System.out.println("daflj");
 
 		view.getTextPaneGlobal().setText(conf.getGlobal());
 		view.getTextPaneInfo().setText(conf.getInfo());
@@ -263,17 +275,46 @@ public class ControladorJIFDHCP implements ActionListener {
 		}
 
 		view.getTableNets().setModel(dtm);
-		
-		
+
 		// Actualizar ComboBox Redes
 		DefaultComboBoxModel dcm = new DefaultComboBoxModel();
 		for (SubNet red : redes) {
 			dcm.addElement(red.getNet().getHostAddress());
 		}
-		
+
 		view.getComboBox().setModel(dcm);
 		
+		actualizarComboBox();
 
+	}
+
+	private void actualizarComboBox() {
+		if (view.getComboBox().getSelectedIndex() != -1) {
+
+			try {
+				InetAddress ip = InetAddress.getByName(view.getComboBox().getSelectedItem().toString());
+				TreeSet<Host> hosts = conf.getHosts(ip);
+
+				// Actualizar tabla host
+				DefaultTableModel dtmh = new DefaultTableModel();
+
+				dtmh.addColumn("Descripcion");
+				dtmh.addColumn("Fixed address");
+				dtmh.addColumn("MAC");
+				dtmh.addColumn("Hostname");
+
+				for (Host host : hosts) {
+					dtmh.addRow(new String[] { host.getComment(), host.getFixedAddress().getHostName(),
+							host.getHardwareEthernet(), host.getHost() });
+				}
+
+				view.getTableHosts().setModel(dtmh);
+
+			} catch (Exception e) {
+
+			}
+		}
+		
 	}
 
 }

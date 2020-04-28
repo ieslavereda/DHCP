@@ -34,12 +34,14 @@ public class JFSubnet extends JInternalFrame {
 	private JCheckBox chckbxRangeActive;
 	private JButton btnAccion;
 	private JButton btnCancelar;
+	private JTextField textFieldDefaultLeaseTime;
+	private JTextField textFieldMaxLeaseTime;
 
 	public JFSubnet() {
 		setClosable(true);
 		setTitle("Net");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 461, 363);
+		setBounds(100, 100, 461, 376);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -53,18 +55,18 @@ public class JFSubnet extends JInternalFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
-						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
 					.addContainerGap())
 		);
-		panel.setLayout(new MigLayout("", "[][grow][grow][grow]", "[24.00][][][][][][][]"));
+		panel.setLayout(new MigLayout("", "[][grow][grow][grow]", "[24.00][][][][][][][][]"));
 		
 		JLabel lblNewLabel = new JLabel("Subnet");
 		panel.add(lblNewLabel, "cell 0 0,alignx trailing");
@@ -88,43 +90,57 @@ public class JFSubnet extends JInternalFrame {
 		textFieldDNS1.setColumns(10);
 		
 		textFieldDNS2 = new JTextField();
-		panel.add(textFieldDNS2, "cell 1 3,growx");
+		panel.add(textFieldDNS2, "cell 2 2,growx");
 		textFieldDNS2.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Gateway");
-		panel.add(lblNewLabel_3, "cell 0 4,alignx trailing");
+		panel.add(lblNewLabel_3, "cell 0 3,alignx trailing");
 		
 		textFieldGateway = new JTextField();
-		panel.add(textFieldGateway, "cell 1 4,growx");
+		panel.add(textFieldGateway, "cell 1 3,growx");
 		textFieldGateway.setColumns(10);
 		
 		JLabel lblNewLabel_4 = new JLabel("NTP-Server");
-		panel.add(lblNewLabel_4, "cell 0 5,alignx trailing,aligny top");
+		panel.add(lblNewLabel_4, "cell 0 4,alignx trailing,aligny top");
 		
 		textFieldNTP = new JTextField();
-		panel.add(textFieldNTP, "cell 1 5,growx");
+		panel.add(textFieldNTP, "cell 1 4,growx");
 		textFieldNTP.setColumns(10);
 		
 		JLabel lblNewLabel_5 = new JLabel("NetBios");
-		panel.add(lblNewLabel_5, "cell 0 6,alignx trailing,aligny top");
+		panel.add(lblNewLabel_5, "cell 0 5,alignx trailing,aligny top");
 		
 		textFieldNetBios = new JTextField();
-		panel.add(textFieldNetBios, "cell 1 6,growx");
+		panel.add(textFieldNetBios, "cell 1 5,growx");
 		textFieldNetBios.setColumns(10);
 		
+		JLabel lblNewLabel_8 = new JLabel("default-lease-time");
+		panel.add(lblNewLabel_8, "cell 0 6,alignx trailing");
+		
+		textFieldDefaultLeaseTime = new JTextField();
+		panel.add(textFieldDefaultLeaseTime, "cell 1 6,growx");
+		textFieldDefaultLeaseTime.setColumns(10);
+		
+		JLabel lblNewLabel_7 = new JLabel("MaxLeaseTime");
+		panel.add(lblNewLabel_7, "cell 0 7,alignx trailing,aligny baseline");
+		
+		textFieldMaxLeaseTime = new JTextField();
+		panel.add(textFieldMaxLeaseTime, "cell 1 7,growx");
+		textFieldMaxLeaseTime.setColumns(10);
+		
 		JLabel lblNewLabel_6 = new JLabel("Range");
-		panel.add(lblNewLabel_6, "cell 0 7,alignx trailing");
+		panel.add(lblNewLabel_6, "cell 0 8,alignx trailing");
 		
 		textFieldRange1 = new JTextField();
-		panel.add(textFieldRange1, "cell 1 7,growx");
+		panel.add(textFieldRange1, "cell 1 8,growx");
 		textFieldRange1.setColumns(10);
 		
 		textFieldRange2 = new JTextField();
-		panel.add(textFieldRange2, "cell 2 7,growx");
+		panel.add(textFieldRange2, "cell 2 8,growx");
 		textFieldRange2.setColumns(10);
 		
 		chckbxRangeActive = new JCheckBox("Active");
-		panel.add(chckbxRangeActive, "cell 3 7");
+		panel.add(chckbxRangeActive, "cell 3 8");
 		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		btnAccion = new JButton("New button");
@@ -191,6 +207,13 @@ public class JFSubnet extends JInternalFrame {
 	public JButton getBtnCancelar() {
 		return btnCancelar;
 	}
-	
+
+	public JTextField getTextFieldDefaultLeaseTime() {
+		return textFieldDefaultLeaseTime;
+	}
+
+	public JTextField getTextFieldMaxLeaseTime() {
+		return textFieldMaxLeaseTime;
+	}
 	
 }
