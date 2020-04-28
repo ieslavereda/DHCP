@@ -20,6 +20,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JPasswordField;
 
 public class JIFLogin extends JInternalFrame {
+
+	private static final long serialVersionUID = 1L;
 	private JTextField textFieldLogin;
 	private JPasswordField passwordField;
 	private JButton btnOk;

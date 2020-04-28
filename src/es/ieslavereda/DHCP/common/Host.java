@@ -10,7 +10,7 @@ public class Host implements Comparable<Host> {
 	private String hardwareEthernet;
 	private InetAddress routers;
 	private ArrayList<InetAddress> domainNameServers;
-	
+
 	public Host(String host, String comment, InetAddress fixedAddress, String hardwareEthernet, InetAddress routers,
 			ArrayList<InetAddress> domainNameServers) {
 		super();
@@ -20,6 +20,12 @@ public class Host implements Comparable<Host> {
 		this.hardwareEthernet = hardwareEthernet;
 		this.routers = routers;
 		this.domainNameServers = domainNameServers;
+	}
+	public Host(InetAddress fixedAddress) {
+		super();
+
+		this.fixedAddress = fixedAddress;
+
 	}
 
 	public String getHost() {
@@ -45,10 +51,10 @@ public class Host implements Comparable<Host> {
 	public ArrayList<InetAddress> getDomainNameServers() {
 		return domainNameServers;
 	}
-	
+
 	public int compareTo(Host h) {
-		
-		// 192.168.1.1  -> [192][168][1][1]
+
+		// 192.168.1.1 -> [192][168][1][1]
 		// 192.168.10.1 -> [192][168][10][1]
 		String[] ip1 = fixedAddress.getHostAddress().split("\\.");
 		String[] ip2 = h.getFixedAddress().getHostAddress().split("\\.");
@@ -62,7 +68,7 @@ public class Host implements Comparable<Host> {
 		else if (ipH1[1] - ipH2[1] != 0)
 			return ipH1[1] - ipH2[1];
 		else if (ipH1[2] - ipH2[2] != 0)
-			return ipH1[2] - ipH2[3];
+			return ipH1[2] - ipH2[2];
 		else
 			return ipH1[3] - ipH2[3];
 
@@ -70,11 +76,27 @@ public class Host implements Comparable<Host> {
 
 	@Override
 	public String toString() {
-		return "Host [host=" + host + ", comment=" + comment + ", fixedAddress=" + fixedAddress + ", hardwareEthernet="
-				+ hardwareEthernet + ", routers=" + routers + ", domainNameServers=" + domainNameServers + "]";
+		String salida = "";
+
+		salida += "# " + this.comment + "\n";
+		salida += "host " + this.host + " {\n";
+		salida += "    fixed-address " + this.fixedAddress.getHostAddress() + ";\n";
+		salida += "    hardware ethernet " + this.hardwareEthernet + ";\n";
+		salida += "    option routers " + this.routers.getHostAddress() + ";\n";
+		salida += "    option domain-name-servers " + this.domainNameServers.get(0).getHostAddress() + ", "
+				+ this.domainNameServers.get(1).getHostAddress() + ";\n";
+		salida += "}" + "\n";
+
+		return salida;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Host) {
+			Host h = (Host) o;
+			return h.getFixedAddress().equals(this.fixedAddress);
+		}
+		return false;
 	}
 
-
-		
-	
 }

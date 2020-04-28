@@ -1,12 +1,9 @@
 package es.ieslavereda.DHCP.view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
@@ -22,6 +19,8 @@ import com.jgoodies.forms.layout.RowSpec;
 
 
 public class JIFProperties extends JInternalFrame {
+
+	private static final long serialVersionUID = 1L;
 	private JTextField textFieldIP;
 	private JTextField textFieldPort;
 	private JTextField textFieldLogin;

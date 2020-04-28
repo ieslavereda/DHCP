@@ -2,8 +2,6 @@ package es.ieslavereda.DHCP.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -50,6 +48,7 @@ public class ControladorJIFDHCP implements ActionListener {
 		view.getBtnAdd().addActionListener(this);
 		view.getComboBox().addActionListener(this);
 
+
 		// Añadimos action command
 		view.getMntmOpen().setActionCommand("Open file");
 		view.getMntmSave().setActionCommand("Save file");
@@ -57,6 +56,7 @@ public class ControladorJIFDHCP implements ActionListener {
 		view.getBtnDelete().setActionCommand("Delete Net");
 		view.getBtnAdd().setActionCommand("Add Net");
 		view.getComboBox().setActionCommand("refresh combo");
+
 
 	}
 
@@ -83,9 +83,11 @@ public class ControladorJIFDHCP implements ActionListener {
 			addNewNet();
 		} else if (command.equals("refresh combo")) {
 			actualizarComboBox();
-		}
+		} 
 
 	}
+
+
 
 	private void addNewNet() {
 		try {
@@ -152,6 +154,8 @@ public class ControladorJIFDHCP implements ActionListener {
 			subnet.getRange().set(0, InetAddress.getByName(jfSubnet.getTextFieldRange1().getText()));
 			subnet.getRange().set(1, InetAddress.getByName(jfSubnet.getTextFieldRange2().getText()));
 			subnet.setPool(jfSubnet.getChckbxRangeActive().isSelected());
+			subnet.setDefaultLeaseTime(Integer.parseInt(jfSubnet.getTextFieldDefaultLeaseTime().getText()));
+			subnet.setMaxLeaseTime(Integer.parseInt(jfSubnet.getTextFieldMaxLeaseTime().getText()));
 
 			jfSubnet.dispose();
 			actualizarVistas();
@@ -171,8 +175,6 @@ public class ControladorJIFDHCP implements ActionListener {
 		String hostAddress = view.getTableNets().getValueAt(row, column).toString();
 
 		try {
-
-			System.out.println(hostAddress);
 
 			conf.eliminarRed(InetAddress.getByName(hostAddress));
 
@@ -216,6 +218,8 @@ public class ControladorJIFDHCP implements ActionListener {
 					jfSubnet.getTextFieldRange2().setText(subnet.getRange().get(1).getHostAddress());
 					jfSubnet.getChckbxRangeActive().setSelected(subnet.isPool());
 					jfSubnet.getTextFieldNetBios().setText(subnet.getNetbiosNameServer().getHostAddress());
+					jfSubnet.getTextFieldMaxLeaseTime().setText(String.valueOf(subnet.getMaxLeaseTime()));
+					jfSubnet.getTextFieldDefaultLeaseTime().setText(String.valueOf(subnet.getDefaultLeaseTime()));
 
 					// Establecer acciones y texto de botones
 					jfSubnet.getBtnAccion().setText("Actualizar");
@@ -252,8 +256,6 @@ public class ControladorJIFDHCP implements ActionListener {
 
 	private void actualizarVistas() {
 
-		System.out.println("daflj");
-
 		view.getTextPaneGlobal().setText(conf.getGlobal());
 		view.getTextPaneInfo().setText(conf.getInfo());
 
@@ -277,7 +279,7 @@ public class ControladorJIFDHCP implements ActionListener {
 		view.getTableNets().setModel(dtm);
 
 		// Actualizar ComboBox Redes
-		DefaultComboBoxModel dcm = new DefaultComboBoxModel();
+		DefaultComboBoxModel<String> dcm = new DefaultComboBoxModel<String>();
 		for (SubNet red : redes) {
 			dcm.addElement(red.getNet().getHostAddress());
 		}

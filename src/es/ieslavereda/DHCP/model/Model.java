@@ -134,9 +134,10 @@ public class Model {
 				} else if (linea.contains("# Informacion")) {
 					cargarInfo(br);
 				} else if (linea.contains("#")) {
-					comentario = linea;
+					comentario = linea.replaceAll("#", "").trim();
 				} else if (linea.contains("subnet")) {
-					cargarRed(br, linea);
+					cargarRed(br, linea,comentario);
+					comentario="";
 				} else if (linea.contains("host")) {
 					cargarHost(br, linea, comentario);
 					comentario = "";
@@ -170,8 +171,6 @@ public class Model {
 			InetAddress routers=null;
 			ArrayList<InetAddress> domainNameServers = new ArrayList<InetAddress>();
 
-			boolean pool = false;
-
 			while ((linea = br.readLine()) != null && !linea.contains("}")) {
 				linea = linea.replace("  ", " ").replaceAll(";", "").replaceAll(",", "").trim();
 
@@ -185,13 +184,10 @@ public class Model {
 					domainNameServers.add(InetAddress.getByName(linea.split(" ")[2]));
 					domainNameServers.add(InetAddress.getByName(linea.split(" ")[3]));
 				}
-
 			}
 
 			Host h = new Host(host, comment, fixedAddress, hardwareEthernet, routers,domainNameServers);
-
-			addHostToNet(h);
-			
+			addHostToNet(h);			
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -221,13 +217,13 @@ public class Model {
 		
 	}
 
-	private void cargarRed(BufferedReader br, String linea) {
+	private void cargarRed(BufferedReader br, String linea, String comentario) {
 
 		try {
 
 			InetAddress net = InetAddress.getByName(linea.split(" ")[1]);
 			InetAddress netmask = InetAddress.getByName(linea.split(" ")[3]);
-			String comment = "";
+			String comment = comentario;
 			ArrayList<InetAddress> optionDomainNameServer = new ArrayList<InetAddress>();
 			InetAddress routers = null;
 			ArrayList<InetAddress> range = new ArrayList<InetAddress>();
@@ -236,7 +232,7 @@ public class Model {
 			int defaultLeaseTime = 0, maxLeaseTime = 0;
 
 			boolean pool = false;
-
+			
 			while ((linea = br.readLine()) != null && !linea.contains("}")) {
 				linea = linea.replace("  ", " ").replaceAll(";", "").replaceAll(",", "").trim();
 
@@ -258,8 +254,6 @@ public class Model {
 					defaultLeaseTime = Integer.parseInt(linea.split(" ")[1]);
 				} else if (linea.contains("max-lease-time")) {
 					maxLeaseTime = Integer.parseInt(linea.split(" ")[1]);
-				} else if (linea.contains("##")) {
-					comment += linea.replaceAll("##", "").trim();
 				}
 
 			}
@@ -268,14 +262,12 @@ public class Model {
 					netbiosNameServer, range, pool, defaultLeaseTime, maxLeaseTime);
 
 			dhcp.addSubNet(subnet);
-
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void cargarGlobal(BufferedReader br) throws IOException {
@@ -294,7 +286,6 @@ public class Model {
 			linea = linea.replaceAll("#", "").trim();
 			dhcp.addLineToInfo(linea);
 		}
-
 	}
 
 }

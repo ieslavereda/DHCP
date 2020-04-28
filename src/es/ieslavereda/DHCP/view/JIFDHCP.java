@@ -1,7 +1,5 @@
 package es.ieslavereda.DHCP.view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
@@ -24,9 +22,9 @@ import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.DefaultComboBoxModel;
 
 public class JIFDHCP extends JInternalFrame {
+	private static final long serialVersionUID = 1L;
 	private JTextField textFieldPort;
 	private JTextField textFieldIP;
 	private JTable tableNets;
@@ -45,7 +43,7 @@ public class JIFDHCP extends JInternalFrame {
 	private JButton btnNetEdit;
 	private JButton btnDelete;
 	private JButton btnRefreshNets;
-	private JComboBox comboBox;
+	private JComboBox<String> comboBox;
 	private JButton btnFreeIPs;
 	private JButton btnRefreshHosts;
 	private JButton btnHostsCancel;
@@ -332,7 +330,7 @@ public class JIFDHCP extends JInternalFrame {
 		panelHostBotones.add(btnHostsCancel, "cell 5 0");
 		panelHostSuperior.setLayout(new MigLayout("", "[248.00][][grow][]", "[]"));
 		
-		comboBox = new JComboBox();
+		comboBox = new JComboBox<String>();
 		panelHostSuperior.add(comboBox, "cell 0 0,growx");
 		
 		btnRefreshHosts = new JButton("Refresh");
@@ -471,7 +469,7 @@ public class JIFDHCP extends JInternalFrame {
 	}
 
 
-	public JComboBox getComboBox() {
+	public JComboBox<String> getComboBox() {
 		return comboBox;
 	}
 

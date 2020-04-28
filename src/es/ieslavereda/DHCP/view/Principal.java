@@ -1,8 +1,6 @@
 package es.ieslavereda.DHCP.view;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -11,11 +9,11 @@ import javax.swing.JMenu;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JDesktopPane;
-import javax.swing.JButton;
 import java.awt.Dimension;
 
 public class Principal extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JMenuItem mntmExit;
 	private JDesktopPane desktop;

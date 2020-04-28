@@ -1,8 +1,5 @@
 package es.ieslavereda.DHCP.view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -21,6 +18,7 @@ import java.awt.event.ActionEvent;
 
 public class JFSubnet extends JInternalFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textFieldMascara;
 	private JTextField textFieldSubnet;

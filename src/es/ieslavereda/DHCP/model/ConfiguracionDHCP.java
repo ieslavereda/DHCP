@@ -1,6 +1,7 @@
 package es.ieslavereda.DHCP.model;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -10,18 +11,18 @@ import es.ieslavereda.DHCP.common.SubNet;
 public class ConfiguracionDHCP {
 
 	private String global;
-	private String info;
+	private ArrayList<String> info;
 	private TreeSet<SubNet> redes;
 
 	public ConfiguracionDHCP() {
 		super();
 		global = "";
-		info = "";
+		info = new ArrayList<String>();
 		redes = new TreeSet<SubNet>();
 	}
 
 	public void addLineToInfo(String line) {
-		info += line + "\n";
+		info.add(line);
 	}
 
 	public void addLineToGlobal(String line) {
@@ -33,7 +34,12 @@ public class ConfiguracionDHCP {
 	}
 
 	public String getInfo() {
-		return info;
+		String informacion = "";
+
+		for (String line : info)
+			informacion += line + "\n";
+
+		return informacion;
 	}
 
 	public TreeSet<SubNet> getRedes() {
@@ -90,7 +96,10 @@ public class ConfiguracionDHCP {
 		salida += global;
 		salida += "# Fin Configuracion global" + "\n\n";
 		salida += "# Informacion" + "\n";
-		salida += "";
+		
+		for (String line : info)
+			salida += "# " + line + "\n";
+
 		salida += "# Fin Informacion" + "\n\n";
 
 		for (SubNet subnet : redes) {
@@ -99,10 +108,9 @@ public class ConfiguracionDHCP {
 
 		return salida;
 	}
+
 	public TreeSet<Host> getHosts(InetAddress ip) {
-		
-		TreeSet<Host> hosts =null;
-		
+
 		Iterator<SubNet> it = redes.iterator();
 		SubNet subnet;
 
@@ -111,10 +119,8 @@ public class ConfiguracionDHCP {
 			if (subnet.getNet().getHostAddress().equals(ip.getHostAddress()))
 				return subnet.getHosts();
 		}
-		
-		
+
 		return null;
-		
 	}
 
 }
