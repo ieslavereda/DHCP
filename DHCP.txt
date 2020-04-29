@@ -1,0 +1,97 @@
+# Configuracion global
+option domain-name "ieslavereda.local";
+option domain-name-servers  172.27.111.5, 172.27.111.6;
+ddns-update-style none;
+default-lease-time 14400;
+# Fin Configuracion global
+
+# Informacion
+# DNS_Aulas = 172.27.111.5 , 172.27.111.6
+# DNS Extra = 80.58.61.250 , 80.58.61.254
+# Fin Informacion
+
+# INFO 1
+subnet 11.0.1.0 netmask 255.255.255.0 {
+  option domain-name-servers 172.27.111.5, 172.27.111.6;
+  option routers 11.0.1.254;   
+  option ntp-servers 10.0.0.254;
+  option netbios-name-servers 11.0.1.254;
+  range 11.0.1.101 11.0.1.150;
+  default-lease-time 14400;
+  max-lease-time 172800;
+}
+# INFO 2
+subnet 11.0.2.0 netmask 255.255.255.0 {
+  option domain-name-servers 172.27.111.5, 172.27.111.6;
+  option routers 11.0.2.254;
+  option ntp-servers 10.0.0.254;
+  option netbios-name-servers 11.0.2.254;
+#  range 11.0.2.101 11.0.2.150;
+  default-lease-time 14400;
+  max-lease-time 172800;
+}
+# INFO 3
+subnet 11.0.3.0 netmask 255.255.255.0 {
+  option domain-name-servers  172.27.111.5, 172.27.111.6;
+  option routers 11.0.3.254;
+  option ntp-servers 10.0.0.254;
+  option netbios-name-servers 11.0.3.254;
+  range 11.0.3.101 11.0.3.175;
+  default-lease-time 14400;
+  max-lease-time 172800;
+}
+
+# AD15R ==>   ( )
+host AD15R {
+fixed-address 11.0.3.81;
+hardware ethernet 00:1d:7d:a1:9f:c9;
+option routers 11.0.3.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
+
+#******************** INFO 1 **********************
+# inf1pc01 ==>   ( )
+host INF1PC01 {
+fixed-address 11.0.1.51;
+hardware ethernet 40:8d:5c:27:e1:5d;
+option routers 11.0.1.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
+# inf1pc02 ==>   ( )
+host INF1PC02 {
+fixed-address 11.0.1.52;
+hardware ethernet fc:aa:14:04:61:b8;
+option routers 11.0.1.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
+# inf1pc03 ==>   ( )
+host INF1PC03 {
+fixed-address 11.0.1.53;
+hardware ethernet fc:aa:14:04:61:97;
+option routers 11.0.1.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
+# inf1pc04 ==>   ( )
+host INF1PC04 {
+fixed-address 11.0.1.54;
+hardware ethernet fc:aa:14:04:60:21;
+option routers 11.0.1.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
+
+
+# inf1pc04 ==>   ( )
+host INF1PC04 {
+fixed-address 11.0.3.54;
+hardware ethernet fc:aa:14:04:60:21;
+option routers 11.0.3.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
+
+# inf1pc04 ==>   ( )
+host INF1PC04 {
+fixed-address 11.0.2.54;
+hardware ethernet fc:bb:14:04:60:21;
+option routers 11.0.2.254;
+option domain-name-servers 172.27.111.5, 172.27.111.6;
+}
